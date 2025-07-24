@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 # Step 1: Remove old default config (if it exists)
 if [ -L /etc/nginx/sites-enabled/default ]; then
