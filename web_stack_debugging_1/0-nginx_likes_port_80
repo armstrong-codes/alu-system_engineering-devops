@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Step 1: Remove old default config (if it exists)
+if [ -L /etc/nginx/sites-enabled/default ]; then
+    echo "Removing existing symlink..."
+    rm /etc/nginx/sites-enabled/default
+fi
+
+# Step 2: Go to the sites-enabled directory
+cd /etc/nginx/sites-enabled/
+
+# Step 3: Create a symbolic link to sites-available/default
+echo "Creating symlink to /etc/nginx/sites-available/default..."
+ln -s ../sites-available/default
+
+# Step 4: Restart Nginx
+echo "Restarting nginx..."
+service nginx restart
+
+# Step 5: Test with curl
+echo "Testing if nginx is responding on port 80..."
+curl -I http://localhost:80
