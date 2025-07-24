@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
+# This script configures Nginx by linking the default site and restarting the server to ensure it serves a page on port 80
 
-# Step 1: Remove old default config (if it exists)
-if [ -L /etc/nginx/sites-enabled/default ]; then
-    echo "Removing existing symlink..."
-    rm /etc/nginx/sites-enabled/default
-fi
+# Remove any existing symlink or file for default site
+rm -f /etc/nginx/sites-enabled/default
 
-# Step 2: Go to the sites-enabled directory
-cd /etc/nginx/sites-enabled/
+# Create a new symbolic link to enable the default site
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
-# Step 3: Create a symbolic link to sites-available/default
-echo "Creating symlink to /etc/nginx/sites-available/default..."
-ln -s ../sites-available/default
+# Test Nginx configuration before applying changes
+nginx -t
 
-# Step 4: Restart Nginx
-echo "Restarting nginx..."
+# Restart Nginx service to apply the configuration
 service nginx restart
 
-# Step 5: Test with curl
-echo "Testing if nginx is responding on port 80..."
-curl -I http://localhost:80
+# Optional: Wait briefly to ensure the service restarts
+sleep 1
+
+# Check if the server is responding with HTTP 200 on port 80
+curl -s -o /dev/null -w "%{http_code}" http://localhost | grep 200
